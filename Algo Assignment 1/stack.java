@@ -8,6 +8,30 @@ public class stack{
         top++;
         
     }
+
+    public int size() {
+        return top;
+    }
+
+    public void copyStack(stack copyFrom) {
+        stack temp_stack = new stack();
+        while (!copyFrom.isEmpty()) {
+            temp_stack.push(copyFrom.pop());
+        }
+        while (!this.isEmpty())
+            this.pop();
+        while (!temp_stack.isEmpty()) {
+            String temp = temp_stack.pop();
+            this.push(temp);
+            copyFrom.push(temp);
+        }
+
+    }
+
+    public void clear() {
+        while (!this.isEmpty())
+            this.pop();
+    }
     public boolean isEmpty(){
         return stack.isEmpty();
     }
@@ -22,7 +46,7 @@ public class stack{
             
         }else{
             //System.out.println("Stack Is Empty!!");
-        return "Stack Is Empty!!";
+            return "$";
         }
     }
 }
