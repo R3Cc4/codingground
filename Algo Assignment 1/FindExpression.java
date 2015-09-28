@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FindExpression {
-    public static final int inputvalue = 1346;
+    public static final int inputvalue = -290;
 
     public static void main(String[] args) {
 
@@ -22,7 +22,13 @@ public class FindExpression {
          numberStack = populateStack(numberStack, numbers);
          stack operatorStack = new stack();
          operatorStack = populateStack(operatorStack, operators);
-
+        stack reversenumber = new stack();
+        reversenumber.copyStack(numberStack);
+        while (!numberStack.isEmpty())
+            numberStack.pop();
+        while (!reversenumber.isEmpty()) {
+            numberStack.push(reversenumber.pop());
+        }
         stack expression = new stack();
 
 
@@ -34,8 +40,7 @@ public class FindExpression {
         create_OperatorStacks(op6, operatorStack, 243, 729);
         create_OperatorStacks(op7, operatorStack, 729, 2187);
         create_OperatorStacks(op8, operatorStack, 2187, 6561);
-
-        List<stack> stacks = new ArrayList<stack>();
+        List<stack> stacks = new ArrayList();
         stacks.add(0, op1);
         stacks.add(1, op2);
         stacks.add(2, op3);
@@ -45,7 +50,6 @@ public class FindExpression {
         stacks.add(6, op7);
         stacks.add(7, op8);
         stacks.add(8, numberStack);
-
         boolean found = find_expression(expression, stacks);
         if (!found) {
 
@@ -54,11 +58,31 @@ public class FindExpression {
         }
      }
 
+    public static void printStack(stack printstack) {
+        stack tempstack = new stack();
+        tempstack.copyStack(printstack);
+        while (!printstack.isEmpty())
+            System.out.println(printstack.pop());
+
+        printstack.copyStack(tempstack);
+
+    }
+
+    public static void printStackLine(stack printstack) {
+        stack tempstack = new stack();
+        tempstack.copyStack(printstack);
+        String temp = "";
+        while (!printstack.isEmpty())
+            temp = temp + printstack.pop();
+        System.out.println(temp);
+        printstack.copyStack(tempstack);
+
+    }
     public static boolean find_expression(stack expression, List<stack> stacks) {
         stack number_stack = new stack();
         number_stack.copyStack(stacks.get(8));
-        int j = 2;
-        while (!stacks.get(0).isEmpty()) {
+
+        while (!stacks.get(7).isEmpty()) {
             expression.push(stacks.get(8).pop());
             expression.push(stacks.get(0).pop());
             expression.push(stacks.get(8).pop());
@@ -78,7 +102,7 @@ public class FindExpression {
             expression.push(stacks.get(8).pop());
 
             stacks.get(8).copyStack(number_stack);
-
+            //printStackLine(expression);
             int outval = evaluateExpression(expression);
 
             if (inputvalue == outval) {
@@ -146,7 +170,7 @@ public class FindExpression {
                 parsed.push(current);
                 continue;
             } else if (current.equals("%")) {
-                temp = parsed.pop() + expression.pop();
+                temp = expression.pop() + parsed.pop();
                 current = expression.pop();
                 if (current.equals("$")) {
                     parsed.push(temp);
@@ -154,7 +178,7 @@ public class FindExpression {
                 }
 
                 while (current.equals("%")) {
-                    temp = temp + expression.pop();
+                    temp = expression.pop() + temp;
                     current = expression.pop();
                 }
                 if (!current.equals("$"))
@@ -173,7 +197,12 @@ public class FindExpression {
         int first, second = 0;
 
         expression.copyStack(parsed);
-
+        /*String tempparsed="";
+        while(!parsed.isEmpty()) {
+         tempparsed=tempparsed+parsed.pop();
+        }
+        System.out.println(tempparsed);
+        parsed.copyStack(expression);*/
         String symbol;
         while (!parsed.isEmpty() && parsed.size() > 1) {
             first = Integer.parseInt(parsed.pop());
